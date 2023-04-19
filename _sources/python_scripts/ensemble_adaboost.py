@@ -56,7 +56,7 @@ data_misclassified = data.iloc[misclassified_samples_idx]
 
 # %%
 import matplotlib.pyplot as plt
-from helpers.plotting import DecisionBoundaryDisplay
+from sklearn.inspection import DecisionBoundaryDisplay
 
 DecisionBoundaryDisplay.from_estimator(
     tree, data, response_method="predict", cmap="RdBu", alpha=0.5
@@ -166,8 +166,8 @@ ensemble_weight
 # %%
 from sklearn.ensemble import AdaBoostClassifier
 
-base_estimator = DecisionTreeClassifier(max_depth=3, random_state=0)
-adaboost = AdaBoostClassifier(base_estimator=base_estimator,
+estimator = DecisionTreeClassifier(max_depth=3, random_state=0)
+adaboost = AdaBoostClassifier(estimator=estimator,
                               n_estimators=3, algorithm="SAMME",
                               random_state=0)
 adaboost.fit(data, target)

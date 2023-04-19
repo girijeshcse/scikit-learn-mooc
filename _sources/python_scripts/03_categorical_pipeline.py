@@ -172,13 +172,13 @@ print(
 # %%
 from sklearn.preprocessing import OneHotEncoder
 
-encoder = OneHotEncoder(sparse=False)
+encoder = OneHotEncoder(sparse_output=False)
 education_encoded = encoder.fit_transform(education_column)
 education_encoded
 
 # %% [markdown]
 # ```{note}
-# `sparse=False` is used in the `OneHotEncoder` for didactic purposes, namely
+# `sparse_output=False` is used in the `OneHotEncoder` for didactic purposes, namely
 # easier visualization of the data.
 #
 # Sparse matrices are efficient data structures when most of your matrix
@@ -258,8 +258,9 @@ pd.DataFrame(data_encoded, columns=columns_encoded).head()
 # - the original categories (before encoding) have an ordering;
 # - the encoded categories follow the same ordering than the original
 #   categories.
-# The **next exercise** highlights the issue of misusing `OrdinalEncoder` with
-# a linear model.
+#
+# The **next exercise** shows what can happen when using an `OrdinalEncoder`
+# with a liner model and the conditions above are not met.
 #
 # One-hot encoding categorical variables with high cardinality can cause 
 # computational inefficiency in tree-based models. Because of this, it is not recommended
@@ -290,16 +291,22 @@ data["native-country"].value_counts()
 #
 # * list all the possible categories and provide it to the encoder via the
 #   keyword argument `categories`;
-# * use the parameter `handle_unknown`.
+# * use the parameter `handle_unknown`, i.e. if an unknown category is encountered
+#   during transform, the resulting one-hot encoded columns for this feature will
+#   be all zeros. 
 #
 # Here, we will use the latter solution for simplicity.
 
 # %% [markdown]
 # ```{tip}
 # Be aware the `OrdinalEncoder` exposes as well a parameter
-# `handle_unknown`. It can be set to `use_encoded_value` and by setting
-# `unknown_value` to handle rare categories. You are going to use these
-# parameters in the next exercise.
+# `handle_unknown`. It can be set to `use_encoded_value`. If that option is chosen,
+# you can define a fixed value to which all unknowns will be set to during
+# `transform`. For example,
+# `OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=42)`
+# will set all values encountered during `transform` to `42` which are not part of
+# the data encountered during the `fit` call.
+# You are going to use these parameters in the next exercise.
 # ```
 
 # %% [markdown]
@@ -333,7 +340,7 @@ cv_results
 
 # %%
 scores = cv_results["test_score"]
-print(f"The accuracy is: {scores.mean():.3f} +/- {scores.std():.3f}")
+print(f"The accuracy is: {scores.mean():.3f} ± {scores.std():.3f}")
 
 # %% [markdown]
 # As you can see, this representation of the categorical variables is

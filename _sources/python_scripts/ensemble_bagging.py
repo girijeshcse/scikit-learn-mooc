@@ -83,10 +83,14 @@ _ = plt.title("Predictions by a single decision tree")
 #
 # ## Bootstrap resampling
 #
-# A bootstrap sample corresponds to a resampling with replacement, of the
-# original dataset, a sample that is the same size as the original dataset.
-# Thus, the bootstrap sample will contain some data points several times while
-# some of the original data points will not be present.
+# Given a dataset with `n` data points, bootstrapping corresponds to resampling
+# with replacement  `n` out of such `n` data points uniformly at random.
+#
+# As a result, the output of the bootstrap sampling procedure is another
+# dataset with also n data points, but likely with duplicates. As a consequence,
+# there are also data points from the original dataset that are never selected to
+# appear in a bootstrap sample (by chance). Those data points that are left away
+# are often referred to as the out-of-bag sample.
 #
 # We will create a function that given `data` and `target` will return a
 # resampled variation `data_bootstrap` and `target_bootstrap`.
@@ -153,15 +157,14 @@ print(
 
 # %% [markdown]
 #
-# On average, ~63.2% of the original data points of the original dataset will
-# be present in a given bootstrap sample. The other ~36.8% are repeated
-# samples.
+# On average, roughly 63.2% of the original data points of the original dataset
+# will be present in a given bootstrap sample. Since the bootstrap sample has
+# the same size as the original dataset, there will be many samples that are in
+# the bootstrap sample multiple times.
 #
-# We are able to generate many datasets, all slightly different.
-#
-# Now, we can fit a decision tree for each of these datasets and they all shall
-# be slightly different as well.
-
+# Using bootstrap we are able to generate many datasets, all slightly
+# different. We can fit a decision tree for each of these datasets and they all
+# shall be slightly different as well.
 
 # %%
 bag_of_trees = []
@@ -242,7 +245,7 @@ _ = plt.title("Predictions of bagged trees")
 from sklearn.ensemble import BaggingRegressor
 
 bagged_trees = BaggingRegressor(
-    base_estimator=DecisionTreeRegressor(max_depth=3),
+    estimator=DecisionTreeRegressor(max_depth=3),
     n_estimators=100,
 )
 _ = bagged_trees.fit(data_train, target_train)
@@ -330,11 +333,11 @@ polynomial_regressor = make_pipeline(
 # base models.
 #
 # The ensemble itself is simply built by passing the resulting pipeline as the
-# `base_estimator` parameter of the `BaggingRegressor` class:
+# `estimator` parameter of the `BaggingRegressor` class:
 
 # %%
 bagging = BaggingRegressor(
-    base_estimator=polynomial_regressor,
+    estimator=polynomial_regressor,
     n_estimators=100,
     random_state=0,
 )

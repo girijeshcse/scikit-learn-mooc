@@ -1,1496 +1,699 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>Regularization of linear regression model &#8212; Scikit-learn course</title>
-    
-  <link href="../_static/css/theme.css" rel="stylesheet">
-  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sklearn_mooc.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    
-  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
-    <script src="../_static/sklearn_mooc.js"></script>
     <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
-    <script>
-        const thebe_selector = ".thebe,.cell"
-        const thebe_selector_input = "pre,.cell_input div.highlight"
-        const thebe_selector_output = ".output,.cell_output"
-    </script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/sklearn_mooc.js"></script>
+    <script src="../_static/matomo.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'python_scripts/linear_models_regularization';</script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="📝 Exercise M4.04" href="linear_models_ex_04.html" />
     <link rel="prev" title="🎥 Intuitions on regularized linear models" href="../linear_models/regularized_linear_models_slides.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../toc.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/scikit-learn-logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">Scikit-learn course</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="../_static/scikit-learn-logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/scikit-learn-logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../index.html">
-   Introduction
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Machine Learning Concepts
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Machine Learning Concepts</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../ml_concepts/slides.html">
-   🎥 Introducing machine-learning concepts
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../ml_concepts/quiz_intro_01.html">
-   ✅ Quiz Intro.01
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_concepts/slides.html">🎥 Introducing machine-learning concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ml_concepts/quiz_intro_01.html">✅ Quiz Intro.01</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  The predictive modeling pipeline
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">The predictive modeling pipeline</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../predictive_modeling_pipeline/predictive_modeling_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../predictive_modeling_pipeline/01_tabular_data_exploration_index.html">
-   Tabular data exploration
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="01_tabular_data_exploration.html">
-     First look at our dataset
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="01_tabular_data_exploration_ex_01.html">
-     📝 Exercise M1.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="01_tabular_data_exploration_sol_01.html">
-     📃 Solution for Exercise M1.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../predictive_modeling_pipeline/01_tabular_data_exploration_quiz_m1_01.html">
-     ✅ Quiz M1.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../predictive_modeling_pipeline/02_numerical_pipeline_index.html">
-   Fitting a scikit-learn model on numerical data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_introduction.html">
-     First model with scikit-learn
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_ex_00.html">
-     📝 Exercise M1.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_sol_00.html">
-     📃 Solution for Exercise M1.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_hands_on.html">
-     Working with numerical data
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_ex_01.html">
-     📝 Exercise M1.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_sol_01.html">
-     📃 Solution for Exercise M1.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_scaling.html">
-     Preprocessing for numerical features
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../predictive_modeling_pipeline/02_numerical_pipeline_video_cross_validation.html">
-     🎥 Validation of a model
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="02_numerical_pipeline_cross_validation.html">
-     Model evaluation using cross-validation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../predictive_modeling_pipeline/02_numerical_pipeline_quiz_m1_02.html">
-     ✅ Quiz M1.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../predictive_modeling_pipeline/03_categorical_pipeline_index.html">
-   Handling categorical data
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-  <label for="toctree-checkbox-3">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="03_categorical_pipeline.html">
-     Encoding of categorical variables
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="03_categorical_pipeline_ex_01.html">
-     📝 Exercise M1.04
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="03_categorical_pipeline_sol_01.html">
-     📃 Solution for Exercise M1.04
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="03_categorical_pipeline_column_transformer.html">
-     Using numerical and categorical variables together
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="03_categorical_pipeline_ex_02.html">
-     📝 Exercise M1.05
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="03_categorical_pipeline_sol_02.html">
-     📃 Solution for Exercise M1.05
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../predictive_modeling_pipeline/03_categorical_pipeline_video.html">
-     🎥 Visualizing scikit-learn pipelines in Jupyter
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../predictive_modeling_pipeline/03_categorical_pipeline_quiz_m1_03.html">
-     ✅ Quiz M1.03
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../predictive_modeling_pipeline/wrap_up_quiz.html">
-   🏁 Wrap-up quiz 1
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../predictive_modeling_pipeline/predictive_modeling_module_take_away.html">
-   Main take-away
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../predictive_modeling_pipeline/predictive_modeling_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../predictive_modeling_pipeline/01_tabular_data_exploration_index.html">Tabular data exploration</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_tabular_data_exploration.html">First look at our dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_tabular_data_exploration_ex_01.html">📝 Exercise M1.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_tabular_data_exploration_sol_01.html">📃 Solution for Exercise M1.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../predictive_modeling_pipeline/01_tabular_data_exploration_quiz_m1_01.html">✅ Quiz M1.01</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Selecting the best model
- </span>
-</p>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../predictive_modeling_pipeline/02_numerical_pipeline_index.html">Fitting a scikit-learn model on numerical data</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_introduction.html">First model with scikit-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_ex_00.html">📝 Exercise M1.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_sol_00.html">📃 Solution for Exercise M1.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_hands_on.html">Working with numerical data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_ex_01.html">📝 Exercise M1.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_sol_01.html">📃 Solution for Exercise M1.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_scaling.html">Preprocessing for numerical features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../predictive_modeling_pipeline/02_numerical_pipeline_video_cross_validation.html">🎥 Validation of a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_numerical_pipeline_cross_validation.html">Model evaluation using cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../predictive_modeling_pipeline/02_numerical_pipeline_quiz_m1_02.html">✅ Quiz M1.02</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../predictive_modeling_pipeline/03_categorical_pipeline_index.html">Handling categorical data</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline.html">Encoding of categorical variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline_ex_01.html">📝 Exercise M1.04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline_sol_01.html">📃 Solution for Exercise M1.04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline_column_transformer.html">Using numerical and categorical variables together</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline_ex_02.html">📝 Exercise M1.05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline_sol_02.html">📃 Solution for Exercise M1.05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../predictive_modeling_pipeline/03_categorical_pipeline_visualization_video.html">🎥 Visualizing scikit-learn pipelines in Jupyter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_categorical_pipeline_visualization.html">Visualizing scikit-learn pipelines in Jupyter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../predictive_modeling_pipeline/03_categorical_pipeline_quiz_m1_03.html">✅ Quiz M1.03</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../predictive_modeling_pipeline/wrap_up_quiz.html">🏁 Wrap-up quiz 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../predictive_modeling_pipeline/predictive_modeling_module_take_away.html">Main take-away</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Selecting the best model</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../overfit/overfit_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../overfit/overfit_overfitting_underfitting_index.html">
-   Overfitting and underfitting
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overfit/overfitting_vs_under_fitting_slides.html">
-     🎥 Overfitting and Underfitting
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_train_test.html">
-     Cross-validation framework
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overfit/overfitting_vs_under_fitting_quiz_m2_01.html">
-     ✅ Quiz M2.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../overfit/overfit_validation_learning_curves_index.html">
-   Validation and learning curves
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-  <label for="toctree-checkbox-5">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overfit/learning_validation_curves_slides.html">
-     🎥 Comparing train and test errors
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_validation_curve.html">
-     Overfit-generalization-underfit
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_learning_curve.html">
-     Effect of the sample size in cross-validation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_ex_01.html">
-     📝 Exercise M2.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_sol_01.html">
-     📃 Solution for Exercise M2.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overfit/learning_validation_curves_quiz_m2_02.html">
-     ✅ Quiz M2.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../overfit/overfit_bias_variance_index.html">
-   Bias versus variance trade-off
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overfit/bias_vs_variance_slides.html">
-     🎥 Bias versus Variance
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../overfit/bias_vs_variance_quiz_m2_03.html">
-     ✅ Quiz M2.03
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../overfit/overfit_wrap_up_quiz.html">
-   🏁 Wrap-up quiz 2
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../overfit/overfit_take_away.html">
-   Main take-away
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../overfit/overfit_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../overfit/overfit_overfitting_underfitting_index.html">Overfitting and underfitting</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overfit/overfitting_vs_under_fitting_slides.html">🎥 Overfitting and Underfitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_train_test.html">Cross-validation framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overfit/overfitting_vs_under_fitting_quiz_m2_01.html">✅ Quiz M2.01</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Hyperparameter tuning
- </span>
-</p>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../overfit/overfit_validation_learning_curves_index.html">Validation and learning curves</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overfit/learning_validation_curves_slides.html">🎥 Comparing train and test errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_validation_curve.html">Overfit-generalization-underfit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_learning_curve.html">Effect of the sample size in cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_ex_01.html">📝 Exercise M2.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_sol_01.html">📃 Solution for Exercise M2.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overfit/learning_validation_curves_quiz_m2_02.html">✅ Quiz M2.02</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../overfit/overfit_bias_variance_index.html">Bias versus variance trade-off</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../overfit/bias_vs_variance_slides.html">🎥 Bias versus Variance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../overfit/bias_vs_variance_quiz_m2_03.html">✅ Quiz M2.03</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../overfit/overfit_wrap_up_quiz.html">🏁 Wrap-up quiz 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overfit/overfit_take_away.html">Main take-away</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hyperparameter tuning</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../tuning/parameter_tuning_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../tuning/parameter_tuning_manual_index.html">
-   Manual tuning
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-  <label for="toctree-checkbox-7">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_manual.html">
-     Set and get hyperparameters in scikit-learn
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_ex_02.html">
-     📝 Exercise M3.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_sol_02.html">
-     📃 Solution for Exercise M3.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../tuning/parameter_tuning_manual_quiz_m3_01.html">
-     ✅ Quiz M3.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../tuning/parameter_tuning_automated_index.html">
-   Automated tuning
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-  <label for="toctree-checkbox-8">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_grid_search.html">
-     Hyperparameter tuning by grid-search
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_randomized_search.html">
-     Hyperparameter tuning by randomized-search
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../tuning/parameter_tuning_parallel_plot_video.html">
-     🎥 Analysis of hyperparameter search results
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_parallel_plot.html">
-     Analysis of hyperparameter search results
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_nested.html">
-     Evaluation and hyperparameter tuning
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_ex_03.html">
-     📝 Exercise M3.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="parameter_tuning_sol_03.html">
-     📃 Solution for Exercise M3.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../tuning/parameter_tuning_automated_quiz_m3_02.html">
-     ✅ Quiz M3.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../tuning/parameter_tuning_wrap_up_quiz.html">
-   🏁 Wrap-up quiz 3
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../tuning/parameter_tuning_module_take_away.html">
-   Main take-away
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../tuning/parameter_tuning_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tuning/parameter_tuning_manual_index.html">Manual tuning</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_manual.html">Set and get hyperparameters in scikit-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_ex_02.html">📝 Exercise M3.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_sol_02.html">📃 Solution for Exercise M3.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tuning/parameter_tuning_manual_quiz_m3_01.html">✅ Quiz M3.01</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Linear models
- </span>
-</p>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tuning/parameter_tuning_automated_index.html">Automated tuning</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_grid_search.html">Hyperparameter tuning by grid-search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_randomized_search.html">Hyperparameter tuning by randomized-search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tuning/parameter_tuning_parallel_plot_video.html">🎥 Analysis of hyperparameter search results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_parallel_plot.html">Analysis of hyperparameter search results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_nested.html">Evaluation and hyperparameter tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_ex_03.html">📝 Exercise M3.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_tuning_sol_03.html">📃 Solution for Exercise M3.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tuning/parameter_tuning_automated_quiz_m3_02.html">✅ Quiz M3.02</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tuning/parameter_tuning_wrap_up_quiz.html">🏁 Wrap-up quiz 3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tuning/parameter_tuning_module_take_away.html">Main take-away</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Linear models</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../linear_models/linear_models_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../linear_models/linear_models_intuitions_index.html">
-   Intuitions on linear models
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/linear_models_slides.html">
-     🎥 Intuitions on linear models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/linear_models_quiz_m4_01.html">
-     ✅ Quiz M4.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../linear_models/linear_models_regression_index.html">
-   Linear regression
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/>
-  <label for="toctree-checkbox-10">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_regression_without_sklearn.html">
-     Linear regression without scikit-learn
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_ex_01.html">
-     📝 Exercise M4.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_sol_01.html">
-     📃 Solution for Exercise M4.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_regression_in_sklearn.html">
-     Linear regression using scikit-learn
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/linear_models_quiz_m4_02.html">
-     ✅ Quiz M4.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../linear_models/linear_models_non_linear_index.html">
-   Modelling non-linear features-target relationships
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/>
-  <label for="toctree-checkbox-11">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_ex_02.html">
-     📝 Exercise M4.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_sol_02.html">
-     📃 Solution for Exercise M4.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_regression_non_linear_link.html">
-     Linear regression for a non-linear features-target relationship
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_ex_03.html">
-     📝 Exercise M4.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_sol_03.html">
-     📃 Solution for Exercise M4.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/linear_models_quiz_m4_03.html">
-     ✅ Quiz M4.03
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="../linear_models/linear_models_regularization_index.html">
-   Regularization in linear model
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/>
-  <label for="toctree-checkbox-12">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/regularized_linear_models_slides.html">
-     🎥 Intuitions on regularized linear models
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="current reference internal" href="#">
-     Regularization of linear regression model
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_ex_04.html">
-     📝 Exercise M4.04
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_sol_04.html">
-     📃 Solution for Exercise M4.04
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/linear_models_quiz_m4_04.html">
-     ✅ Quiz M4.04
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../linear_models/linear_models_classification_index.html">
-   Linear model for classification
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/>
-  <label for="toctree-checkbox-13">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="logistic_regression.html">
-     Linear model for classification
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_ex_05.html">
-     📝 Exercise M4.05
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="linear_models_sol_05.html">
-     📃 Solution for Exercise M4.05
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="logistic_regression_non_linear.html">
-     Beyond linear separation in classification
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../linear_models/linear_models_quiz_m4_05.html">
-     ✅ Quiz M4.05
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../linear_models/linear_models_wrap_up_quiz.html">
-   🏁 Wrap-up quiz 4
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../linear_models/linear_models_module_take_away.html">
-   Main take-away
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../linear_models/linear_models_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../linear_models/linear_models_intuitions_index.html">Intuitions on linear models</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/linear_models_slides.html">🎥 Intuitions on linear models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/linear_models_quiz_m4_01.html">✅ Quiz M4.01</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Decision tree models
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../trees/trees_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../trees/trees_intuitions_index.html">
-   Intuitions on tree-based models
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/>
-  <label for="toctree-checkbox-14">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../trees/slides.html">
-     🎥 Intuitions on tree-based models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../trees/trees_quiz_m5_01.html">
-     ✅ Quiz M5.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../trees/trees_classification_index.html">
-   Decision tree in classification
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/>
-  <label for="toctree-checkbox-15">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_classification.html">
-     Build a classification decision tree
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_ex_01.html">
-     📝 Exercise M5.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_sol_01.html">
-     📃 Solution for Exercise M5.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../trees/trees_quiz_m5_02.html">
-     ✅ Quiz M5.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../trees/trees_regression_index.html">
-   Decision tree in regression
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/>
-  <label for="toctree-checkbox-16">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_regression.html">
-     Decision tree for regression
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_ex_02.html">
-     📝 Exercise M5.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_sol_02.html">
-     📃 Solution for Exercise M5.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../trees/trees_quiz_m5_03.html">
-     ✅ Quiz M5.03
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../trees/trees_hyperparameters_index.html">
-   Hyperparameters of decision tree
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/>
-  <label for="toctree-checkbox-17">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_hyperparameters.html">
-     Importance of decision tree hyperparameters on generalization
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../trees/trees_quiz_m5_04.html">
-     ✅ Quiz M5.04
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trees/trees_wrap_up_quiz.html">
-   🏁 Wrap-up quiz 5
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../trees/trees_module_take_away.html">
-   Main take-away
-  </a>
- </li>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../linear_models/linear_models_regression_index.html">Linear regression</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-10"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="linear_regression_without_sklearn.html">Linear regression without scikit-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_ex_01.html">📝 Exercise M4.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_sol_01.html">📃 Solution for Exercise M4.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_regression_in_sklearn.html">Linear regression using scikit-learn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/linear_models_quiz_m4_02.html">✅ Quiz M4.02</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Ensemble of models
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../ensemble/ensemble_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../ensemble/ensemble_bootstrap_index.html">
-   Ensemble method using bootstrapping
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/>
-  <label for="toctree-checkbox-18">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../ensemble/bagging_slides.html">
-     🎥 Intuitions on ensemble models: bagging
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_introduction.html">
-     Introductory example to ensemble models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_bagging.html">
-     Bagging
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_ex_01.html">
-     📝 Exercise M6.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_sol_01.html">
-     📃 Solution for Exercise M6.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_random_forest.html">
-     Random forests
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_ex_02.html">
-     📝 Exercise M6.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_sol_02.html">
-     📃 Solution for Exercise M6.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../ensemble/ensemble_quiz_m6_01.html">
-     ✅ Quiz M6.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../ensemble/ensemble_boosting_index.html">
-   Ensemble based on boosting
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/>
-  <label for="toctree-checkbox-19">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../ensemble/boosting_slides.html">
-     🎥 Intuitions on ensemble models: boosting
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_adaboost.html">
-     Adaptive Boosting (AdaBoost)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_gradient_boosting.html">
-     Gradient-boosting decision tree (GBDT)
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_ex_03.html">
-     📝 Exercise M6.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_sol_03.html">
-     📃 Solution for Exercise M6.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_hist_gradient_boosting.html">
-     Speeding-up gradient-boosting
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../ensemble/ensemble_quiz_m6_02.html">
-     ✅ Quiz M6.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../ensemble/ensemble_hyperparameters_index.html">
-   Hyperparameter tuning with ensemble methods
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/>
-  <label for="toctree-checkbox-20">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_hyperparameters.html">
-     Hyperparameter tuning
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_ex_04.html">
-     📝 Exercise M6.04
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="ensemble_sol_04.html">
-     📃 Solution for Exercise M6.04
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../ensemble/ensemble_quiz_m6_03.html">
-     ✅ Quiz M6.03
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../ensemble/ensemble_wrap_up_quiz.html">
-   🏁 Wrap-up quiz 6
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../ensemble/ensemble_module_take_away.html">
-   Main take-away
-  </a>
- </li>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../linear_models/linear_models_non_linear_index.html">Modelling non-linear features-target relationships</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-11"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_ex_02.html">📝 Exercise M4.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_sol_02.html">📃 Solution for Exercise M4.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_regression_non_linear_link.html">Linear regression for a non-linear features-target relationship</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_ex_03.html">📝 Exercise M4.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_sol_03.html">📃 Solution for Exercise M4.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/linear_models_quiz_m4_03.html">✅ Quiz M4.03</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Evaluating model performance
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../evaluation/evaluation_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../evaluation/cross_validation_baseline_index.html">
-   Comparing a model with simple baselines
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/>
-  <label for="toctree-checkbox-21">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_baseline.html">
-     Comparing model performance with a simple baseline
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_ex_02.html">
-     📝 Exercise M7.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_sol_02.html">
-     📃 Solution for Exercise M7.01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../evaluation/evaluation_quiz_m7_01.html">
-     ✅ Quiz M7.01
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../evaluation/cross_validation_choices_index.html">
-   Choice of cross-validation
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/>
-  <label for="toctree-checkbox-22">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_stratification.html">
-     Stratification
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_grouping.html">
-     Sample grouping
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_time.html">
-     Non i.i.d. data
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../evaluation/evaluation_quiz_m7_02.html">
-     ✅ Quiz M7.02
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../evaluation/cross_validation_nested_index.html">
-   Nested cross-validation
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/>
-  <label for="toctree-checkbox-23">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="cross_validation_nested.html">
-     Nested cross-validation
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../evaluation/evaluation_quiz_m7_03.html">
-     ✅ Quiz M7.03
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../evaluation/metrics_classification_index.html">
-   Classification metrics
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" type="checkbox"/>
-  <label for="toctree-checkbox-24">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="metrics_classification.html">
-     Classification
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="metrics_ex_01.html">
-     📝 Exercise M7.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="metrics_sol_01.html">
-     📃 Solution for Exercise M7.02
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../evaluation/evaluation_quiz_m7_04.html">
-     ✅ Quiz M7.04
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../evaluation/metrics_regression_index.html">
-   Regression metrics
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/>
-  <label for="toctree-checkbox-25">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="metrics_regression.html">
-     Regression
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="metrics_ex_02.html">
-     📝 Exercise M7.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="metrics_sol_02.html">
-     📃 Solution for Exercise M7.03
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../evaluation/evaluation_quiz_m7_05.html">
-     ✅ Quiz M7.05
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../evaluation/evaluation_wrap_up_quiz.html">
-   🏁 Wrap-up quiz 7
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../evaluation/evaluation_module_take_away.html">
-   Main take-away
-  </a>
- </li>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../linear_models/linear_models_regularization_index.html">Regularization in linear model</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-12"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/regularized_linear_models_slides.html">🎥 Intuitions on regularized linear models</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Regularization of linear regression model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_ex_04.html">📝 Exercise M4.04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_sol_04.html">📃 Solution for Exercise M4.04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/linear_models_quiz_m4_04.html">✅ Quiz M4.04</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Concluding remarks
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../concluding_remarks_video.html">
-   🎥 Concluding remarks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../concluding_remarks.html">
-   Concluding remarks
-  </a>
- </li>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../linear_models/linear_models_classification_index.html">Linear model for classification</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-13"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="logistic_regression.html">Linear model for classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_ex_05.html">📝 Exercise M4.05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linear_models_sol_05.html">📃 Solution for Exercise M4.05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logistic_regression_non_linear.html">Beyond linear separation in classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linear_models/linear_models_quiz_m4_05.html">✅ Quiz M4.05</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Appendix
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../appendix/glossary.html">
-   Glossary
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../appendix/datasets_intro.html">
-   Datasets description
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" type="checkbox"/>
-  <label for="toctree-checkbox-26">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="trees_dataset.html">
-     The penguins datasets
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../appendix/adult_census_description.html">
-     The adult census dataset
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="datasets_california_housing.html">
-     The California housing dataset
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="datasets_ames_housing.html">
-     The Ames housing dataset
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="datasets_blood_transfusion.html">
-     The blood transfusion dataset
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="datasets_bike_rides.html">
-     The bike rides dataset
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../appendix/acknowledgement.html">
-   Acknowledgement
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../appendix/notebook_timings.html">
-   Notebook timings
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../appendix/toc_redirect.html">
-   Table of contents
-  </a>
- </li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../linear_models/linear_models_wrap_up_quiz.html">🏁 Wrap-up quiz 4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linear_models/linear_models_module_take_away.html">Main take-away</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  🚧 Feature selection
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Decision tree models</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../feature_selection/feature_selection_module_intro.html">
-   Module overview
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="feature_selection_introduction.html">
-   Benefits of using feature selection
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../feature_selection/feature_selection_limitation_index.html">
-   Caveats of feature selection
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" type="checkbox"/>
-  <label for="toctree-checkbox-27">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="feature_selection_ex_01.html">
-     📝 Exercise 01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="feature_selection_sol_01.html">
-     📃 Solution for Exercise 01
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="feature_selection_limitation_model.html">
-     Limitation of selecting feature using a model
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../feature_selection/feature_selection_module_take_away.html">
-   Main take-away
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../feature_selection/feature_selection_quiz.html">
-   ✅ Quiz
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../trees/trees_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../trees/trees_intuitions_index.html">Intuitions on tree-based models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-14"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../trees/slides.html">🎥 Intuitions on tree-based models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trees/trees_quiz_m5_01.html">✅ Quiz M5.01</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  🚧 Interpretation
- </span>
-</p>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../trees/trees_classification_index.html">Decision tree in classification</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-15"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="trees_classification.html">Build a classification decision tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trees_ex_01.html">📝 Exercise M5.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trees_sol_01.html">📃 Solution for Exercise M5.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trees/trees_quiz_m5_02.html">✅ Quiz M5.02</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../trees/trees_regression_index.html">Decision tree in regression</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-16"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="trees_regression.html">Decision tree for regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trees_ex_02.html">📝 Exercise M5.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trees_sol_02.html">📃 Solution for Exercise M5.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trees/trees_quiz_m5_03.html">✅ Quiz M5.03</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../trees/trees_hyperparameters_index.html">Hyperparameters of decision tree</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-17"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="trees_hyperparameters.html">Importance of decision tree hyperparameters on generalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../trees/trees_quiz_m5_04.html">✅ Quiz M5.04</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../trees/trees_wrap_up_quiz.html">🏁 Wrap-up quiz 5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trees/trees_module_take_away.html">Main take-away</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Ensemble of models</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="dev_features_importance.html">
-   Feature importance
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../interpretation/interpretation_quiz.html">
-   ✅ Quiz
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../ensemble/ensemble_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ensemble/ensemble_bootstrap_index.html">Ensemble method using bootstrapping</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-18"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ensemble/bagging_slides.html">🎥 Intuitions on ensemble models: bagging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_introduction.html">Introductory example to ensemble models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_bagging.html">Bagging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_ex_01.html">📝 Exercise M6.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_sol_01.html">📃 Solution for Exercise M6.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_random_forest.html">Random forests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_ex_02.html">📝 Exercise M6.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_sol_02.html">📃 Solution for Exercise M6.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ensemble/ensemble_quiz_m6_01.html">✅ Quiz M6.01</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ensemble/ensemble_boosting_index.html">Ensemble based on boosting</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-19"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ensemble/boosting_slides.html">🎥 Intuitions on ensemble models: boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_adaboost.html">Adaptive Boosting (AdaBoost)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_gradient_boosting.html">Gradient-boosting decision tree (GBDT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_ex_03.html">📝 Exercise M6.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_sol_03.html">📃 Solution for Exercise M6.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_hist_gradient_boosting.html">Speeding-up gradient-boosting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ensemble/ensemble_quiz_m6_02.html">✅ Quiz M6.02</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ensemble/ensemble_hyperparameters_index.html">Hyperparameter tuning with ensemble methods</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-20"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_hyperparameters.html">Hyperparameter tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_ex_04.html">📝 Exercise M6.04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensemble_sol_04.html">📃 Solution for Exercise M6.04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ensemble/ensemble_quiz_m6_03.html">✅ Quiz M6.03</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ensemble/ensemble_wrap_up_quiz.html">🏁 Wrap-up quiz 6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ensemble/ensemble_module_take_away.html">Main take-away</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Evaluating model performance</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/evaluation_module_intro.html">Module overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../evaluation/cross_validation_baseline_index.html">Comparing a model with simple baselines</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-21"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_baseline.html">Comparing model performance with a simple baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_ex_02.html">📝 Exercise M7.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_sol_02.html">📃 Solution for Exercise M7.01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../evaluation/evaluation_quiz_m7_01.html">✅ Quiz M7.01</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../evaluation/cross_validation_choices_index.html">Choice of cross-validation</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-22"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_stratification.html">Stratification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_grouping.html">Sample grouping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_time.html">Non i.i.d. data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../evaluation/evaluation_quiz_m7_02.html">✅ Quiz M7.02</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../evaluation/cross_validation_nested_index.html">Nested cross-validation</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-23"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="cross_validation_nested.html">Nested cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../evaluation/evaluation_quiz_m7_03.html">✅ Quiz M7.03</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../evaluation/metrics_classification_index.html">Classification metrics</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-24"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics_classification.html">Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics_ex_01.html">📝 Exercise M7.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics_sol_01.html">📃 Solution for Exercise M7.02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../evaluation/evaluation_quiz_m7_04.html">✅ Quiz M7.04</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../evaluation/metrics_regression_index.html">Regression metrics</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-25"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics_regression.html">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics_ex_02.html">📝 Exercise M7.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics_sol_02.html">📃 Solution for Exercise M7.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../evaluation/evaluation_quiz_m7_05.html">✅ Quiz M7.05</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/evaluation_wrap_up_quiz.html">🏁 Wrap-up quiz 7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/evaluation_module_take_away.html">Main take-away</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Concluding remarks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../concluding_remarks_video.html">🎥 Concluding remarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concluding_remarks.html">Concluding remarks</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/glossary.html">Glossary</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../appendix/datasets_intro.html">Datasets description</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-26"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="trees_dataset.html">The penguins datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../appendix/adult_census_description.html">The adult census dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets_california_housing.html">The California housing dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets_ames_housing.html">The Ames housing dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets_blood_transfusion.html">The blood transfusion dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets_bike_rides.html">The bike rides dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/acknowledgement.html">Acknowledgement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notebook_timings.html">Notebook timings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/toc_redirect.html">Table of contents</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🚧 Feature selection</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../feature_selection/feature_selection_module_intro.html">Module overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feature_selection_introduction.html">Benefits of using feature selection</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../feature_selection/feature_selection_limitation_index.html">Caveats of feature selection</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-27"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection_ex_01.html">📝 Exercise 01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection_sol_01.html">📃 Solution for Exercise 01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="feature_selection_limitation_model.html">Limitation of selecting feature using a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../feature_selection/feature_selection_module_take_away.html">Main take-away</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../feature_selection/feature_selection_quiz.html">✅ Quiz</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🚧 Interpretation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="dev_features_importance.html">Feature importance</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../interpretation/interpretation_quiz.html">✅ Quiz</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-</div>
-
-</div>
-
-
-          
-
-
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/python_scripts/linear_models_regularization.py"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.py</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+</nav></div>
     </div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/INRIA/scikit-learn-mooc"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/INRIA/scikit-learn-mooc/issues/new?title=Issue%20on%20page%20%2Fpython_scripts/linear_models_regularization.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        <a class="edit-button" href="https://github.com/INRIA/scikit-learn-mooc/edit/main/python_scripts/linear_models_regularization.py"><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/INRIA/scikit-learn-mooc/main?urlpath=tree/python_scripts/linear_models_regularization.py" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/INRIA/scikit-learn-mooc/main?urlpath=tree/python_scripts/linear_models_regularization.py"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        <button type="button" class="btn btn-secondary topbarbtn"
-            onclick="initThebeSBT()" title="Launch Thebe" data-toggle="tooltip" data-placement="left"><i
-                class="fas fa-play"></i><span style="margin-left: .4em;">Live Code</span></button>
-        
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/INRIA/scikit-learn-mooc" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/INRIA/scikit-learn-mooc/edit/main/python_scripts/linear_models_regularization.py" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/INRIA/scikit-learn-mooc/issues/new?title=Issue%20on%20page%20%2Fpython_scripts/linear_models_regularization.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/python_scripts/linear_models_regularization.py" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.py</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
     </div>
+  
 </div>
+</div>
+              
+              
 
-        </div>
-
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Regularization of linear regression model</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#effect-of-regularization">
-   Effect of regularization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#feature-scaling-and-regularization">
-   Feature scaling and regularization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#fine-tuning-the-regularization-parameter">
-   Fine tuning the regularization parameter
-  </a>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-of-regularization">Effect of regularization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-scaling-and-regularization">Feature scaling and regularization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fine-tuning-the-regularization-parameter">Fine tuning the regularization parameter</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Regularization of linear regression model</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#effect-of-regularization">
-   Effect of regularization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#feature-scaling-and-regularization">
-   Feature scaling and regularization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#fine-tuning-the-regularization-parameter">
-   Fine tuning the regularization parameter
-  </a>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="regularization-of-linear-regression-model">
-<h1>Regularization of linear regression model<a class="headerlink" href="#regularization-of-linear-regression-model" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="regularization-of-linear-regression-model">
+<h1>Regularization of linear regression model<a class="headerlink" href="#regularization-of-linear-regression-model" title="Permalink to this heading">#</a></h1>
 <p>In this notebook, we will see the limitations of linear regression models and
 the advantage of using regularized models instead.</p>
 <p>Besides, we will also present the preprocessing required when dealing
@@ -1498,8 +701,8 @@ with regularized models, furthermore when the regularization parameter
 needs to be tuned.</p>
 <p>We will start by highlighting the over-fitting issue that can arise with
 a simple linear regression model.</p>
-<div class="section" id="effect-of-regularization">
-<h2>Effect of regularization<a class="headerlink" href="#effect-of-regularization" title="Permalink to this headline">¶</a></h2>
+<section id="effect-of-regularization">
+<h2>Effect of regularization<a class="headerlink" href="#effect-of-regularization" title="Permalink to this heading">#</a></h2>
 <p>We will first load the California housing dataset.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1636,13 +839,13 @@ assess the generalization performance of our model.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;train_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the train set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the train set:
-4190.212 +/- 151.123
+4190.212 ± 151.123
 </pre></div>
 </div>
 </div>
@@ -1651,13 +854,13 @@ assess the generalization performance of our model.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;test_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the test set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the test set:
-13334.943 +/- 20292.681
+13334.943 ± 20292.681
 </pre></div>
 </div>
 </div>
@@ -1734,7 +937,7 @@ names</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/linear_models_regularization_15_0.png" src="../_images/linear_models_regularization_15_0.png" />
+<img alt="../_images/7c88589773691ace1855bb0ca1f518de8007cc3d2f2bbb8b9d5f7781edbb85c3.png" src="../_images/7c88589773691ace1855bb0ca1f518de8007cc3d2f2bbb8b9d5f7781edbb85c3.png" />
 </div>
 </div>
 <p>We can force the linear regression model to consider all features in a more
@@ -1755,28 +958,28 @@ model which enforces such behavior.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.672e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.67257e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.75536e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.67367e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=3.5546e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.75974e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.82401e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=4.96672e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.672e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.67257e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.75536e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.67367e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=3.5546e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.75974e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.82401e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.68318e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
-/opt/hostedtoolcache/Python/3.7.12/x64/lib/python3.7/site-packages/sklearn/linear_model/_ridge.py:157: LinAlgWarning: Ill-conditioned matrix (rcond=2.68514e-17): result may not be accurate.
-  return linalg.solve(A, Xy, sym_pos=True, overwrite_a=True).T
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=4.96672e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.68318e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
+/opt/hostedtoolcache/Python/3.9.16/x64/lib/python3.9/site-packages/sklearn/linear_model/_ridge.py:216: LinAlgWarning: Ill-conditioned matrix (rcond=2.68514e-17): result may not be accurate.
+  return linalg.solve(A, Xy, assume_a=&quot;pos&quot;, overwrite_a=True).T
 </pre></div>
 </div>
 </div>
@@ -1789,13 +992,13 @@ numerical problems when training the predictive model.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;train_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the train set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the train set:
-4373.180 +/- 153.942
+4373.180 ± 153.942
 </pre></div>
 </div>
 </div>
@@ -1804,13 +1007,13 @@ numerical problems when training the predictive model.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;test_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the test set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the test set:
-7303.589 +/- 4950.732
+7303.589 ± 4950.732
 </pre></div>
 </div>
 </div>
@@ -1834,7 +1037,7 @@ ridge with the un-regularized linear regression.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/linear_models_regularization_23_0.png" src="../_images/linear_models_regularization_23_0.png" />
+<img alt="../_images/d50e64f6cd7de9c4416ad9b7f766ca2c1e621c36251d29218267c49babb0a4e6.png" src="../_images/d50e64f6cd7de9c4416ad9b7f766ca2c1e621c36251d29218267c49babb0a4e6.png" />
 </div>
 </div>
 <p>By comparing the magnitude of the weights on this plot compared to the
@@ -1844,9 +1047,9 @@ towards zero with respect to the linear regression model.</p>
 <p>However, in this example, we omitted two important aspects: (i) the need to
 scale the data and (ii) the need to search for the best regularization
 parameter.</p>
-</div>
-<div class="section" id="feature-scaling-and-regularization">
-<h2>Feature scaling and regularization<a class="headerlink" href="#feature-scaling-and-regularization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="feature-scaling-and-regularization">
+<h2>Feature scaling and regularization<a class="headerlink" href="#feature-scaling-and-regularization" title="Permalink to this heading">#</a></h2>
 <p>On the one hand, weights define the link between feature values and the
 predicted target.
 On the other hand, regularization adds constraints on the weights of the
@@ -1888,13 +1091,13 @@ scaler will be placed just before the regressor.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;train_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the train set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the train set:
-4347.036 +/- 156.666
+4347.036 ± 156.666
 </pre></div>
 </div>
 </div>
@@ -1903,13 +1106,13 @@ scaler will be placed just before the regressor.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;test_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the test set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the test set:
-5508.472 +/- 1816.642
+5508.472 ± 1816.642
 </pre></div>
 </div>
 </div>
@@ -1935,7 +1138,7 @@ spot.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/linear_models_regularization_30_0.png" src="../_images/linear_models_regularization_30_0.png" />
+<img alt="../_images/ab6358996159e2ac612907fda920d4532485d102762e2659b1f62e32b00f5b6d.png" src="../_images/ab6358996159e2ac612907fda920d4532485d102762e2659b1f62e32b00f5b6d.png" />
 </div>
 </div>
 <p>Compare to the previous plots, we see that now all weight magnitudes are
@@ -1970,7 +1173,7 @@ of the value of <code class="docutils literal notranslate"><span class="pre">alp
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/linear_models_regularization_34_0.png" src="../_images/linear_models_regularization_34_0.png" />
+<img alt="../_images/6a75d82613148f24edc5eeb2e2914d6ae665a2eae91b96168f8b8b7ff51501a1.png" src="../_images/6a75d82613148f24edc5eeb2e2914d6ae665a2eae91b96168f8b8b7ff51501a1.png" />
 </div>
 </div>
 <p>Looking specifically to weights values, we observe that increasing the value
@@ -1989,13 +1192,13 @@ in the presence of rare categories could be problematic (i.e. division by a very
 small standard deviation) and it can therefore introduce numerical issues.</p>
 </div>
 <p>In the previous analysis, we did not study if the parameter <code class="docutils literal notranslate"><span class="pre">alpha</span></code> will have
-an effect on the performance. We chose the parameter beforehand and fix it
+an effect on the performance. We chose the parameter beforehand and fixed it
 for the analysis.</p>
 <p>In the next section, we will check the impact of the regularization
 parameter <code class="docutils literal notranslate"><span class="pre">alpha</span></code> and how it should be tuned.</p>
-</div>
-<div class="section" id="fine-tuning-the-regularization-parameter">
-<h2>Fine tuning the regularization parameter<a class="headerlink" href="#fine-tuning-the-regularization-parameter" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="fine-tuning-the-regularization-parameter">
+<h2>Fine tuning the regularization parameter<a class="headerlink" href="#fine-tuning-the-regularization-parameter" title="Permalink to this heading">#</a></h2>
 <p>As mentioned, the regularization parameter needs to be tuned on each dataset.
 The default parameter will not lead to the optimal model. Therefore, we need
 to tune the <code class="docutils literal notranslate"><span class="pre">alpha</span></code> parameter.</p>
@@ -2022,7 +1225,7 @@ testing score.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">RidgeCV</span>
 
-<span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
 <span class="n">ridge</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">PolynomialFeatures</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">StandardScaler</span><span class="p">(),</span>
                       <span class="n">RidgeCV</span><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span> <span class="n">store_cv_values</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
@@ -2046,13 +1249,13 @@ testing score.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;train_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the train set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">train_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the train set:
-4306.562 +/- 25.918
+4301.922 ± 24.826
 </pre></div>
 </div>
 </div>
@@ -2061,13 +1264,13 @@ testing score.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_error</span> <span class="o">=</span> <span class="o">-</span><span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;test_score&quot;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean squared error of linear regression model on the test set:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">test_error</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean squared error of linear regression model on the test set:
-4348.657 +/- 252.921
+4458.556 ± 462.192
 </pre></div>
 </div>
 </div>
@@ -2075,14 +1278,16 @@ testing score.</p>
 <p>By optimizing <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, we see that the training and testing scores are close.
 It indicates that our model is not overfitting.</p>
 <p>When fitting the ridge regressor, we also requested to store the error found
-during cross-validation (by setting the parameter <code class="docutils literal notranslate"><span class="pre">store_cv_values=True</span></code>).
-We will plot the mean squared error for the different <code class="docutils literal notranslate"><span class="pre">alphas</span></code> regularization
-strength that we tried.</p>
+during cross-validation (by setting the parameter <code class="docutils literal notranslate"><span class="pre">store_cv_values=True</span></code>). We
+will plot the mean squared error for the different <code class="docutils literal notranslate"><span class="pre">alphas</span></code> regularization
+strength that we tried. The error bars represent one standard deviation of
+the average mean square error across folds for a given value of <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mse_alphas</span> <span class="o">=</span> <span class="p">[</span><span class="n">est</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cv_values_</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
               <span class="k">for</span> <span class="n">est</span> <span class="ow">in</span> <span class="n">cv_results</span><span class="p">[</span><span class="s2">&quot;estimator&quot;</span><span class="p">]]</span>
 <span class="n">cv_alphas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mse_alphas</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">alphas</span><span class="p">)</span>
+<span class="n">cv_alphas</span> <span class="o">=</span> <span class="n">cv_alphas</span><span class="o">.</span><span class="n">aggregate</span><span class="p">([</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;std&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 <span class="n">cv_alphas</span>
 </pre></div>
 </div>
@@ -2106,143 +1311,115 @@ strength that we tried.</p>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>0.010000</th>
-      <th>0.012743</th>
-      <th>0.016238</th>
-      <th>0.020691</th>
-      <th>0.026367</th>
-      <th>0.033598</th>
-      <th>0.042813</th>
-      <th>0.054556</th>
-      <th>0.069519</th>
-      <th>0.088587</th>
-      <th>0.112884</th>
-      <th>0.143845</th>
-      <th>0.183298</th>
-      <th>0.233572</th>
-      <th>0.297635</th>
-      <th>0.379269</th>
-      <th>0.483293</th>
-      <th>0.615848</th>
-      <th>0.784760</th>
-      <th>1.000000</th>
+      <th>mean</th>
+      <th>std</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>7587.897141</td>
-      <td>7059.531216</td>
-      <td>6579.796667</td>
-      <td>6161.839629</td>
-      <td>5813.048345</td>
-      <td>5535.350138</td>
-      <td>5326.646369</td>
-      <td>5182.950517</td>
-      <td>5100.749049</td>
-      <td>5079.212663</td>
-      <td>5122.029454</td>
-      <td>5238.704149</td>
-      <td>5445.118890</td>
-      <td>5763.012259</td>
-      <td>6217.925433</td>
-      <td>6835.274126</td>
-      <td>7634.692137</td>
-      <td>8623.620241</td>
-      <td>9791.918443</td>
-      <td>11109.476019</td>
+      <th>0.010000</th>
+      <td>10805.760257</td>
+      <td>7859.294941</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>7079.341771</td>
-      <td>6696.622046</td>
-      <td>6329.022308</td>
-      <td>5987.727181</td>
-      <td>5681.306000</td>
-      <td>5415.171818</td>
-      <td>5191.880969</td>
-      <td>5012.209177</td>
-      <td>4876.780585</td>
-      <td>4787.974274</td>
-      <td>4751.851652</td>
-      <td>4779.853646</td>
-      <td>4889.937328</td>
-      <td>5106.656625</td>
-      <td>5459.549144</td>
-      <td>5979.280717</td>
-      <td>6691.530974</td>
-      <td>7609.581815</td>
-      <td>8727.609953</td>
-      <td>10017.092899</td>
+      <th>0.012589</th>
+      <td>9835.307516</td>
+      <td>6588.155387</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>24857.406605</td>
-      <td>21448.284772</td>
-      <td>18293.478416</td>
-      <td>15481.009011</td>
-      <td>13067.031991</td>
-      <td>11071.457116</td>
-      <td>9480.437579</td>
-      <td>8254.431555</td>
-      <td>7338.963939</td>
-      <td>6675.026438</td>
-      <td>6207.024331</td>
-      <td>5887.541169</td>
-      <td>5679.263698</td>
-      <td>5554.913823</td>
-      <td>5496.051755</td>
-      <td>5491.367683</td>
-      <td>5534.775517</td>
-      <td>5623.398006</td>
-      <td>5755.456140</td>
-      <td>5928.154410</td>
+      <th>0.015849</th>
+      <td>8925.577610</td>
+      <td>5409.395931</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>7504.216958</td>
-      <td>7125.074257</td>
-      <td>6754.172985</td>
-      <td>6400.999897</td>
-      <td>6072.937966</td>
-      <td>5774.941819</td>
-      <td>5509.955509</td>
-      <td>5280.027720</td>
-      <td>5087.960263</td>
-      <td>4939.271829</td>
-      <td>4844.228092</td>
-      <td>4819.618117</td>
-      <td>4889.808854</td>
-      <td>5086.420585</td>
-      <td>5445.877349</td>
-      <td>6004.320850</td>
-      <td>6790.113763</td>
-      <td>7815.311733</td>
-      <td>9068.542918</td>
-      <td>10511.939341</td>
+      <th>0.019953</th>
+      <td>8100.047161</td>
+      <td>4353.016704</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>6999.938808</td>
-      <td>6598.898743</td>
-      <td>6215.363499</td>
-      <td>5861.328579</td>
-      <td>5546.025773</td>
-      <td>5275.377052</td>
-      <td>5052.349007</td>
-      <td>4878.140850</td>
-      <td>4753.964890</td>
-      <td>4683.117084</td>
-      <td>4673.049960</td>
-      <td>4737.162496</td>
-      <td>4895.935124</td>
-      <td>5176.863333</td>
-      <td>5612.500529</td>
-      <td>6236.037942</td>
-      <td>7074.449338</td>
-      <td>8140.303978</td>
-      <td>9424.471281</td>
-      <td>10892.352852</td>
+      <th>0.025119</th>
+      <td>7375.000527</td>
+      <td>3438.794963</td>
+    </tr>
+    <tr>
+      <th>0.031623</th>
+      <td>6758.474506</td>
+      <td>2674.639258</td>
+    </tr>
+    <tr>
+      <th>0.039811</th>
+      <td>6250.760542</td>
+      <td>2056.950531</td>
+    </tr>
+    <tr>
+      <th>0.050119</th>
+      <td>5846.266069</td>
+      <td>1572.763214</td>
+    </tr>
+    <tr>
+      <th>0.063096</th>
+      <td>5536.215174</td>
+      <td>1202.943947</td>
+    </tr>
+    <tr>
+      <th>0.079433</th>
+      <td>5311.576140</td>
+      <td>925.547806</td>
+    </tr>
+    <tr>
+      <th>0.100000</th>
+      <td>5165.715922</td>
+      <td>718.596591</td>
+    </tr>
+    <tr>
+      <th>0.125893</th>
+      <td>5096.474028</td>
+      <td>562.042934</td>
+    </tr>
+    <tr>
+      <th>0.158489</th>
+      <td>5107.489238</td>
+      <td>439.763119</td>
+    </tr>
+    <tr>
+      <th>0.199526</th>
+      <td>5208.638340</td>
+      <td>345.021050</td>
+    </tr>
+    <tr>
+      <th>0.251189</th>
+      <td>5415.385561</td>
+      <td>297.489290</td>
+    </tr>
+    <tr>
+      <th>0.316228</th>
+      <td>5746.801131</td>
+      <td>353.672626</td>
+    </tr>
+    <tr>
+      <th>0.398107</th>
+      <td>6222.125875</td>
+      <td>535.737882</td>
+    </tr>
+    <tr>
+      <th>0.501187</th>
+      <td>6856.124687</td>
+      <td>820.747311</td>
+    </tr>
+    <tr>
+      <th>0.630957</th>
+      <td>7654.025118</td>
+      <td>1192.443073</td>
+    </tr>
+    <tr>
+      <th>0.794328</th>
+      <td>8607.322588</td>
+      <td>1638.892918</td>
+    </tr>
+    <tr>
+      <th>1.000000</th>
+      <td>9691.803104</td>
+      <td>2144.446582</td>
     </tr>
   </tbody>
 </table>
@@ -2250,15 +1427,18 @@ strength that we tried.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_alphas</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">cv_alphas</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">cv_alphas</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">],</span>
+             <span class="n">yerr</span><span class="o">=</span><span class="n">cv_alphas</span><span class="p">[</span><span class="s2">&quot;std&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="mi">4_500</span><span class="p">,</span> <span class="mi">11_000</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Mean squared error</span><span class="se">\n</span><span class="s2"> (lower is better)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Error obtained by cross-validation&quot;</span><span class="p">)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Testing error obtained by cross-validation&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/linear_models_regularization_42_0.png" src="../_images/linear_models_regularization_42_0.png" />
+<img alt="../_images/a134873af09330133354e26401d3ab749b1b371168010822fa5ac6f2f06569bd.png" src="../_images/a134873af09330133354e26401d3ab749b1b371168010822fa5ac6f2f06569bd.png" />
 </div>
 </div>
 <p>As we can see, regularization is just like salt in cooking: one must balance
@@ -2272,11 +1452,11 @@ its amount to get the best generalization performance. We can check if the best
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.08858667904100823,
- 0.11288378916846889,
- 0.37926901907322497,
- 0.14384498882876628,
- 0.11288378916846889]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.07943282347242812,
+ 0.12589254117941676,
+ 0.31622776601683794,
+ 0.12589254117941676,
+ 0.09999999999999999]
 </pre></div>
 </div>
 </div>
@@ -2284,40 +1464,41 @@ its amount to get the best generalization performance. We can check if the best
 <p>The optimal regularization strength is not necessarily the same on all
 cross-validation iterations. But since we expect each cross-validation
 resampling to stem from the same data distribution, it is common practice
-to use the average value of the best <code class="docutils literal notranslate"><span class="pre">alpha</span></code> found on different
-cross-validation folds as our final estimate for the tuned <code class="docutils literal notranslate"><span class="pre">alpha</span></code>.</p>
+to choose the best <code class="docutils literal notranslate"><span class="pre">alpha</span></code> to put into production as lying in the range
+defined by:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The mean optimal alpha leading to the best generalization performance is:</span><span class="se">\n</span><span class="s2">&quot;</span>
-      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">best_alphas</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">best_alphas</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Min optimal alpha: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">best_alphas</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> and &quot;</span>
+      <span class="sa">f</span><span class="s2">&quot;Max optimal alpha: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">best_alphas</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The mean optimal alpha leading to the best generalization performance is:
-0.17 +/- 0.11
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Min optimal alpha: 0.08 and Max optimal alpha: 0.32
 </pre></div>
 </div>
 </div>
 </div>
+<p>This range can be reduced by decreasing the spacing between the grid of
+<code class="docutils literal notranslate"><span class="pre">alphas</span></code>.</p>
 <p>In this notebook, you learned about the concept of regularization and
 the importance of preprocessing and parameter tuning.</p>
-</div>
-</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
         binderOptions: {
-            repo: "INRIA/scikit-learn-mooc",
-            ref: "main",
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
         },
         codeMirrorConfig: {
             theme: "abcdef",
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./python_scripts"
         },
         predefinedOutput: true
@@ -2325,56 +1506,120 @@ the importance of preprocessing and parameter tuning.</p>
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="../linear_models/regularized_linear_models_slides.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">🎥 Intuitions on regularized linear models</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../linear_models/regularized_linear_models_slides.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🎥 Intuitions on regularized linear models</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="linear_models_ex_04.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="linear_models_ex_04.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">📝 Exercise M4.04</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
+</div></div>
+  
 </div>
+
+                </footer>
+              
+            </div>
             
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#effect-of-regularization">Effect of regularization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-scaling-and-regularization">Feature scaling and regularization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fine-tuning-the-regularization-parameter">Fine tuning the regularization parameter</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
     
-      By scikit-learn developers<br/>
+<p class="component-author">
+By scikit-learn developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
     
-        &copy; Copyright 2021.<br/>
-      <div class="extra_footer">
-        <div>
-   <a href="https://www.fun-mooc.fr/en/courses/machine-learning-python-scikit-learn">Register</a>
-  and get the full "Machine learning in Python with scikit-learn" MOOC experience!</br>
-  Brought to you by
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <div>
+  <div class="mooc_add">
+   <a href="https://www.fun-mooc.fr/en/courses/machine-learning-python-scikit-learn">Join the full MOOC for better learning!</a>
+  </div>
+  Brought to you under a <a href="https://github.com/INRIA/scikit-learn-mooc/blob/main/LICENSE">CC-BY License</a> by
   <a href="https://learninglab.inria.fr">Inria Learning Lab</a>,
   <a href="https://scikit-learn.fondation-inria.fr">scikit-learn @ La Fondation Inria</a>,
   <a href="https://www.inria-academy.fr/formation/scikit-learn-la-boite-a-outils-de-lapprentissage-automatique/">Inria Academy</a>,
   with many thanks to the <a href="https://scikit-learn.org">scikit-learn</a> community as a whole!
 </div>
 
-      </div>
-  </p>
-</footer>
-</main>
-
-
-      </div>
-    </div>
+</div>
+  </div>
   
-  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
+          </footer>
+        
 
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

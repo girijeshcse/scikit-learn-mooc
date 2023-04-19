@@ -41,12 +41,6 @@ data = adult_census.drop(columns=[target_name, "education-num"])
 # this pipeline is identical to the one we used in the previous notebook.
 
 # %%
-from sklearn import set_config
-
-# To get a diagram visualization of the pipeline
-set_config(display="diagram")
-
-# %%
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.compose import make_column_selector as selector
@@ -107,7 +101,7 @@ cv_results
 # %%
 print(
     "Generalization score without hyperparameters tuning:\n"
-    f"{cv_results['test_score'].mean():.3f} +/- {cv_results['test_score'].std():.3f}"
+    f"{cv_results['test_score'].mean():.3f} ± {cv_results['test_score'].std():.3f}"
 )
 
 # %% [markdown]
@@ -116,7 +110,7 @@ print(
 #
 # ### With hyperparameter tuning
 #
-# As we shown in the previous notebook, one can use a search strategy that uses
+# As shown in the previous notebook, one can use a search strategy that uses
 # cross-validation to find the best set of parameters. Here, we will use a
 # grid-search strategy and reproduce the steps done in the previous notebook.
 #
@@ -169,7 +163,7 @@ model_grid_search.best_params_
 # hyper-parameters and to train the refitted model.
 #
 # Because of the above, one must keep an external, held-out test set for the
-# final evaluation the refitted model. We highlight here the process using a
+# final evaluation of the refitted model. We highlight here the process using a
 # single train-test split.
 
 # %%
@@ -184,7 +178,7 @@ accuracy = model_grid_search.score(data_test, target_test)
 print(f"Accuracy on test set: {accuracy:.3f}")
 
 # %% [markdown]
-# The score measure on the final test set is almost with the range of the
+# The score measure on the final test set is almost within the range of the
 # internal CV score for the best hyper-parameter combination. This is reassuring
 # as it means that the tuning procedure did not cause significant overfitting
 # in itself (other-wise the final test score would have been lower than the
@@ -231,7 +225,7 @@ print(f"Accuracy on test set: {accuracy:.3f}")
 # refitted tuned model.
 #
 # In practice, we only need to embed the grid-search in the function
-# `cross-validate` to perform such evaluation.
+# `cross_validate` to perform such evaluation.
 
 # %%
 cv_results = cross_validate(
@@ -243,7 +237,7 @@ cv_results = pd.DataFrame(cv_results)
 cv_test_scores = cv_results['test_score']
 print(
     "Generalization score with hyperparameters tuning:\n"
-    f"{cv_test_scores.mean():.3f} +/- {cv_test_scores.std():.3f}"
+    f"{cv_test_scores.mean():.3f} ± {cv_test_scores.std():.3f}"
 )
 
 # %% [markdown]
@@ -301,7 +295,7 @@ for cv_fold, estimator_in_fold in enumerate(cv_results["estimator"]):
 # coordinate plot of the results of a large hyperparameter search as seen in
 # the exercises.
 #
-# From a deployment point of view, one could also chose to deploy all the
+# From a deployment point of view, one could also choose to deploy all the
 # models found by the outer cross-validation loop and make them vote to get the
 # final predictions. However this can cause operational problems because it
 # uses more memory and makes computing prediction slower, resulting in a higher

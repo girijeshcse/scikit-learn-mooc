@@ -89,7 +89,7 @@ from sklearn.model_selection import cross_val_score
 scores_tree = cross_val_score(tree, data, target)
 
 print(f"Decision tree classifier: "
-      f"{scores_tree.mean():.3f} +/- {scores_tree.std():.3f}")
+      f"{scores_tree.mean():.3f} ± {scores_tree.std():.3f}")
 
 # %% [markdown]
 #
@@ -104,7 +104,7 @@ from sklearn.ensemble import BaggingClassifier
 bagged_trees = make_pipeline(
     preprocessor,
     BaggingClassifier(
-        base_estimator=DecisionTreeClassifier(random_state=0),
+        estimator=DecisionTreeClassifier(random_state=0),
         n_estimators=50, n_jobs=2, random_state=0,
     )
 )
@@ -113,7 +113,7 @@ bagged_trees = make_pipeline(
 scores_bagged_trees = cross_val_score(bagged_trees, data, target)
 
 print(f"Bagged decision tree classifier: "
-      f"{scores_bagged_trees.mean():.3f} +/- {scores_bagged_trees.std():.3f}")
+      f"{scores_bagged_trees.mean():.3f} ± {scores_bagged_trees.std():.3f}")
 
 # %% [markdown]
 #
@@ -121,7 +121,7 @@ print(f"Bagged decision tree classifier: "
 # better than the performance of a single tree.
 #
 # Now, we will use a random forest. You will observe that we do not need to
-# specify any `base_estimator` because the estimator is forced to be a decision
+# specify any `estimator` because the estimator is forced to be a decision
 # tree. Thus, we just specify the desired number of trees in the forest.
 
 # %%
@@ -136,7 +136,7 @@ random_forest = make_pipeline(
 scores_random_forest = cross_val_score(random_forest, data, target)
 
 print(f"Random forest classifier: "
-      f"{scores_random_forest.mean():.3f} +/- "
+      f"{scores_random_forest.mean():.3f} ± "
       f"{scores_random_forest.std():.3f}")
 
 # %% [markdown]

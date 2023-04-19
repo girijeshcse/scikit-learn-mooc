@@ -1,5 +1,12 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.5
 #   kernelspec:
 #     display_name: Python 3
 #     name: python3
@@ -71,7 +78,7 @@ elapsed_time = time.time() - start
 scores = cv_results["test_score"]
 
 print("The mean cross-validation accuracy is: "
-      f"{scores.mean():.3f} +/- {scores.std():.3f} "
+      f"{scores.mean():.3f} ± {scores.std():.3f} "
       f"with a fitting time of {elapsed_time:.3f}")
 
 # %% [markdown]
@@ -95,7 +102,7 @@ print("The mean cross-validation accuracy is: "
 #
 # Hint: `HistGradientBoostingClassifier` does not yet support sparse input
 # data. You might want to use
-# `OneHotEncoder(handle_unknown="ignore", sparse=False)` to force the use of a
+# `OneHotEncoder(handle_unknown="ignore", sparse_output=False)` to force the use of a
 # dense representation as a workaround.
 
 # %%

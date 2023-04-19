@@ -1,5 +1,12 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.5
 #   kernelspec:
 #     display_name: Python 3
 #     name: python3
@@ -68,9 +75,9 @@ model = Pipeline([
 # Write your code here.
 
 # %% [markdown]
-#
-# Now use the test set to score the model using the best parameters
-# that we found using cross-validation in the training set.
+# Now use the test set to score the model using the best parameters that we
+# found using cross-validation. You will have to refit the model over the full
+# training set.
 
 # %%
 # Write your code here.

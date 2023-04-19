@@ -71,7 +71,7 @@ elapsed_time = time.time() - start
 scores = cv_results["test_score"]
 
 print("The mean cross-validation accuracy is: "
-      f"{scores.mean():.3f} +/- {scores.std():.3f} "
+      f"{scores.mean():.3f} ± {scores.std():.3f} "
       f"with a fitting time of {elapsed_time:.3f}")
 
 # %% [markdown]
@@ -101,7 +101,7 @@ elapsed_time = time.time() - start
 scores = cv_results["test_score"]
 
 print("The mean cross-validation accuracy is: "
-      f"{scores.mean():.3f} +/- {scores.std():.3f} "
+      f"{scores.mean():.3f} ± {scores.std():.3f} "
       f"with a fitting time of {elapsed_time:.3f}")
 
 # %% [markdown] tags=["solution"]
@@ -126,7 +126,7 @@ print("The mean cross-validation accuracy is: "
 #
 # Hint: `HistGradientBoostingClassifier` does not yet support sparse input
 # data. You might want to use
-# `OneHotEncoder(handle_unknown="ignore", sparse=False)` to force the use of a
+# `OneHotEncoder(handle_unknown="ignore", sparse_output=False)` to force the use of a
 # dense representation as a workaround.
 
 # %%
@@ -135,7 +135,7 @@ import time
 
 from sklearn.preprocessing import OneHotEncoder
 
-categorical_preprocessor = OneHotEncoder(handle_unknown="ignore", sparse=False)
+categorical_preprocessor = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
 preprocessor = ColumnTransformer([
     ('one-hot-encoder', categorical_preprocessor, categorical_columns)],
     remainder="passthrough")
@@ -149,7 +149,7 @@ elapsed_time = time.time() - start
 scores = cv_results["test_score"]
 
 print("The mean cross-validation accuracy is: "
-      f"{scores.mean():.3f} +/- {scores.std():.3f} "
+      f"{scores.mean():.3f} ± {scores.std():.3f} "
       f"with a fitting time of {elapsed_time:.3f}")
 
 # %% [markdown] tags=["solution"]
